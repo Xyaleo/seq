@@ -1,9 +1,14 @@
 const Sequelize = require('sequelize');
+const config=require('./config');
 
-const sequelize = new Sequelize('test','root','******',{
-    host:'localhost',
-    dialect:'mysql',
-    port: 3306,
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+    host: config.host,
+    dialect: 'mysql',
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 30000
+    }
 });
 
 // 测试连接
@@ -42,14 +47,14 @@ const Student = sequelize.define('student',{
 })
 
 // 同步表
-// sequelize.sync()
+// Student.sync()
 
-// 查询1
+// 查询所有数据
 Student.findAll().then(users=>{
     console.log('All student:',JSON.stringify(users,null,4));
 })
 
-// 查询2
+// 按条件查询
 // Student.findAll({limit: 10, where: {'Clno': 'BD'}}).then(users=>{
 //      console.log(JSON.stringify(users,null,4));
 // })
